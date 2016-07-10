@@ -2,6 +2,7 @@
 (* parserが利用する変数、関数、型などの定義 *)
 open Syntax
 let addtyp x = (x, Type.gentyp ())
+
 %}
 
 /* (* 字句を表すデータ型の定義 (caml2html: parser_token) *) */
@@ -11,6 +12,8 @@ let addtyp x = (x, Type.gentyp ())
 %token NOT
 %token MINUS
 %token PLUS
+%token AST
+%token SLASH
 %token MINUS_DOT
 %token PLUS_DOT
 %token AST_DOT
@@ -24,6 +27,12 @@ let addtyp x = (x, Type.gentyp ())
 %token IF
 %token THEN
 %token ELSE
+%token FOR
+%token TO
+%token DO
+%token DONE
+%token WHILE
+%token BY
 %token <Id.t> IDENT
 %token LET
 %token IN
@@ -36,6 +45,7 @@ let addtyp x = (x, Type.gentyp ())
 %token LPAREN
 %token RPAREN
 %token EOF
+%token SEMISEMI
 
 /* (* 優先順位とassociativityの定義（低い方から高い方へ） (caml2html: parser_prior) *) */
 %right prec_let
@@ -51,8 +61,8 @@ let addtyp x = (x, Type.gentyp ())
 %left DOT
 
 /* (* 開始記号の定義 *) */
-%type <Syntax.t> exp
-%start exp
+%type <Syntax.toplevel> toplevel
+%start toplevel
 
 %%
 
@@ -87,6 +97,10 @@ exp: /* (* 一般の式 (caml2html: parser_exp) *) */
     { Add($1, $3) }
 | exp MINUS exp
     { Sub($1, $3) }
+| exp AST exp
+    { Mul($1, $3) }
+| exp SLASH exp
+    { Div($1, $3) }
 | exp EQUAL exp
     { Eq($1, $3) }
 | exp LESS_GREATER exp
@@ -119,6 +133,11 @@ exp: /* (* 一般の式 (caml2html: parser_exp) *) */
 | LET REC fundef IN exp
     %prec prec_let
     { LetRec($3, $5) }
+| FOR IDENT EQUAL exp TO exp by DO exp DONE
+    { match $7 with None -> For ($2, $4, $6, (Int 1), $9)
+                  | Some e -> For ($2, $4, $6, e, $9) }
+| WHILE exp DO exp DONE
+    { While ($2, $4)}
 | exp actual_args
     %prec prec_app
     { App($1, $2) }
@@ -129,7 +148,7 @@ exp: /* (* 一般の式 (caml2html: parser_exp) *) */
 | simple_exp DOT LPAREN exp RPAREN LESS_MINUS exp
     { Put($1, $4, $7) }
 | exp SEMICOLON exp
-    { Let((Id.gentmp Type.Unit, Type.Unit), $1, $3) }
+    { Seq ($1, $3) }
 | ARRAY_CREATE simple_exp simple_exp
     %prec prec_app
     { Array($2, $3) }
@@ -138,6 +157,12 @@ exp: /* (* 一般の式 (caml2html: parser_exp) *) */
 	(Printf.sprintf "parse error near characters %d-%d"
 	   (Parsing.symbol_start ())
 	   (Parsing.symbol_end ())) }
+
+by:
+| BY exp
+    { Some $2 }
+| /* empty */
+    { None }
 
 fundef:
 | IDENT formal_args EQUAL exp
@@ -168,3 +193,21 @@ pat:
     { $1 @ [addtyp $3] }
 | IDENT COMMA IDENT
     { [addtyp $1; addtyp $3] }
+
+toplevel:
+| bind semisemi toplevel
+    { (Fundef $1) :: $3 }
+| exp semisemi toplevel
+    { (Exp $1) :: $3 }
+| bind semisemi
+    { [(Fundef $1)] }
+| exp semisemi
+    { [Exp $1] }
+
+semisemi:
+| SEMISEMI { }
+| /* empty */ { }
+
+bind:
+| LET REC fundef
+    { $3 }

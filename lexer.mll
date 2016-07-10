@@ -34,6 +34,10 @@ rule token = parse
     { MINUS }
 | '+' (* +.より後回しにしなくても良い? 最長一致? *)
     { PLUS }
+| '*'
+    { AST }
+| '/'
+    { SLASH }
 | "-."
     { MINUS_DOT }
 | "+."
@@ -66,6 +70,16 @@ rule token = parse
     { IN }
 | "rec"
     { REC }
+| "for"
+    { FOR }
+| "to"
+    { TO }
+| "by"
+    { BY }
+| "do"
+    { DO }
+| "done"
+    { DONE }
 | ','
     { COMMA }
 | '_'
@@ -78,6 +92,8 @@ rule token = parse
     { LESS_MINUS }
 | ';'
     { SEMICOLON }
+| ";;"
+    { SEMISEMI }
 | eof
     { EOF }
 | lower (digit|lower|upper|'_')* (* 他の「予約語」より後でないといけない *)
