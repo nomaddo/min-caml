@@ -1,0 +1,64 @@
+alpha.cmo : m.cmo kNormal.cmi id.cmo alpha.cmi
+alpha.cmx : m.cmx kNormal.cmx id.cmx alpha.cmi
+anchor.cmo :
+anchor.cmx :
+asm.cmo : type.cmo s.cmo id.cmo asm.cmi
+asm.cmx : type.cmx s.cmx id.cmx asm.cmi
+assoc.cmo : kNormal.cmi assoc.cmi
+assoc.cmx : kNormal.cmx assoc.cmi
+beta.cmo : m.cmo kNormal.cmi beta.cmi
+beta.cmx : m.cmx kNormal.cmx beta.cmi
+closure.cmo : type.cmo s.cmo m.cmo kNormal.cmi id.cmo closure.cmi
+closure.cmx : type.cmx s.cmx m.cmx kNormal.cmx id.cmx closure.cmi
+constFold.cmo : m.cmo kNormal.cmi constFold.cmi
+constFold.cmx : m.cmx kNormal.cmx constFold.cmi
+elim.cmo : s.cmo kNormal.cmi id.cmo elim.cmi
+elim.cmx : s.cmx kNormal.cmx id.cmx elim.cmi
+emit.cmo : type.cmo s.cmo id.cmo asm.cmi emit.cmi
+emit.cmx : type.cmx s.cmx id.cmx asm.cmx emit.cmi
+env.cmo : type.cmo id.cmo
+env.cmx : type.cmx id.cmx
+id.cmo :
+id.cmx :
+inline.cmo : m.cmo kNormal.cmi alpha.cmi inline.cmi
+inline.cmx : m.cmx kNormal.cmx alpha.cmx inline.cmi
+kNormal.cmo : typing.cmo type.cmo syntax.cmo s.cmo m.cmo id.cmo kNormal.cmi
+kNormal.cmx : typing.cmx type.cmx syntax.cmx s.cmx m.cmx id.cmx kNormal.cmi
+lexer.cmo : type.cmo parser.cmi
+lexer.cmx : type.cmx parser.cmx
+m.cmo : id.cmo
+m.cmx : id.cmx
+main.cmo : typing.cmo typedtree.cmo parser.cmi lexer.cmo env.cmo
+main.cmx : typing.cmx typedtree.cmx parser.cmx lexer.cmx env.cmx
+parser.cmo : syntax.cmo parser.cmi
+parser.cmx : syntax.cmx parser.cmi
+regAlloc.cmo : type.cmo s.cmo m.cmo id.cmo asm.cmi regAlloc.cmi
+regAlloc.cmx : type.cmx s.cmx m.cmx id.cmx asm.cmx regAlloc.cmi
+s.cmo : id.cmo
+s.cmx : id.cmx
+simm.cmo : m.cmo asm.cmi simm.cmi
+simm.cmx : m.cmx asm.cmx simm.cmi
+syntax.cmo :
+syntax.cmx :
+type.cmo :
+type.cmx :
+typedtree.cmo : type.cmo id.cmo
+typedtree.cmx : type.cmx id.cmx
+typing.cmo : typedtree.cmo type.cmo syntax.cmo id.cmo env.cmo
+typing.cmx : typedtree.cmx type.cmx syntax.cmx id.cmx env.cmx
+virtual.cmo : type.cmo s.cmo m.cmo id.cmo closure.cmi asm.cmi virtual.cmi
+virtual.cmx : type.cmx s.cmx m.cmx id.cmx closure.cmx asm.cmx virtual.cmi
+alpha.cmi : m.cmo kNormal.cmi id.cmo
+asm.cmi : type.cmo id.cmo
+assoc.cmi : kNormal.cmi
+beta.cmi : kNormal.cmi
+closure.cmi : type.cmo s.cmo kNormal.cmi id.cmo
+constFold.cmi : kNormal.cmi
+elim.cmi : kNormal.cmi
+emit.cmi : asm.cmi
+inline.cmi : kNormal.cmi
+kNormal.cmi : type.cmo syntax.cmo s.cmo id.cmo
+parser.cmi : syntax.cmo
+regAlloc.cmi : asm.cmi
+simm.cmi : asm.cmi
+virtual.cmi : closure.cmi asm.cmi

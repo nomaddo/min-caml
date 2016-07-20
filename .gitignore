@@ -1,0 +1,6 @@
+*.cm*
+*.o
+min-caml
+min-caml.opt
+parser.ml
+lexer.ml
